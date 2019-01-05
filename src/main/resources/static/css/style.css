@@ -1,0 +1,8 @@
+.jumbotron {
+    margin-top: 15px;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: center;
+}
