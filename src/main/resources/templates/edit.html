@@ -8,41 +8,41 @@
     <div class="container">
         <h2>Edit Fahrzeug Details</h2>
         <div>
-            <!-- fahrzeug muss mit dem definierten Wort in FahrzeugController uebereinstimmen! -->
-            <form class="form-horizontal" th:object="${fahrzeug}" th:action="@{/fahrzeuge}" method="post">
+            <!-- vehicle muss mit dem definierten Wort in FahrzeugController uebereinstimmen! -->
+            <form class="form-horizontal" th:object="${vehicle}" th:action="@{/vehicles}" method="post">
                 <div class="form-group">
                     <div class="col-sm-10">
                         <input type="hidden" class="form-control" th:field="*{id}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Marke:</label>
+                    <label class="col-sm-2 control-label">car brand:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{marke}" />
+                        <input type="text" class="form-control" th:field="*{carBrand}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Bezeichnung:</label>
+                    <label class="col-sm-2 control-label">description:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{bezeichnung}" />
+                        <input type="text" class="form-control" th:field="*{description}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Sitzplätze:</label>
+                    <label class="col-sm-2 control-label">seats:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{sitzplaetze}" />
+                        <input type="text" class="form-control" th:field="*{seats}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Fahrer:</label>
+                    <label class="col-sm-2 control-label">driver:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{fahrer}" />
+                        <input type="text" class="form-control" th:field="*{driver}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">verfügbar:</label>
+                    <label class="col-sm-2 control-label">available:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{verfuegbar}" />
+                        <input type="text" class="form-control" th:field="*{available}" />
                     </div>
                 </div>
                 <div class="form-group">

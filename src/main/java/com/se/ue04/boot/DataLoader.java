@@ -1,7 +1,7 @@
 package com.se.ue04.boot;
 
-import com.se.ue04.model.Fahrzeug;
-import com.se.ue04.repository.FahrzeugRepository;
+import com.se.ue04.model.Vehicle;
+import com.se.ue04.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,42 +10,42 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    private FahrzeugRepository fahrzeugRepository;
+    private VehicleRepository vehicleRepository;
 
     @Autowired
-    public void setFahrzeugRepository(FahrzeugRepository fahrzeugRepository) {
-        this.fahrzeugRepository = fahrzeugRepository;
+    public void setVehicleRepository(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        Fahrzeug fahrzeug1 = new Fahrzeug();
-        fahrzeug1.setBezeichnung("Testfahrzeug");
-        fahrzeug1.setFahrer("Max Musterfahrer");
-        fahrzeug1.setMarke("Mercedes");
-        fahrzeug1.setSitzplaetze(5);
-        fahrzeug1.setVerfuegbar(true);
+        Vehicle vehicle1 = new Vehicle();
+        vehicle1.setDescription("Testfahrzeug");
+        vehicle1.setDriver("Max Musterfahrer");
+        vehicle1.setCarBrand("Mercedes");
+        vehicle1.setSeats(5);
+        vehicle1.setAvailable(true);
 
-        fahrzeugRepository.save(fahrzeug1);
+        vehicleRepository.save(vehicle1);
 
-        Fahrzeug fahrzeug2 = new Fahrzeug();
-        fahrzeug2.setBezeichnung("Testfahrzeug2");
-        fahrzeug2.setFahrer("Anna Musterfahrerin");
-        fahrzeug2.setMarke("Fiat");
-        fahrzeug2.setSitzplaetze(5);
-        fahrzeug2.setVerfuegbar(true);
+        Vehicle vehicle2 = new Vehicle();
+        vehicle2.setDescription("Testfahrzeug2");
+        vehicle2.setDriver("Anna Musterfahrerin");
+        vehicle2.setCarBrand("Fiat");
+        vehicle2.setSeats(5);
+        vehicle2.setAvailable(true);
 
-        fahrzeugRepository.save(fahrzeug2);
+        vehicleRepository.save(vehicle2);
 
-        Fahrzeug fahrzeug3 = new Fahrzeug();
-        fahrzeug3.setBezeichnung("Testfahrzeug3");
-        fahrzeug3.setFahrer("Anna Musterfahrerin");
-        fahrzeug3.setMarke("BMW");
-        fahrzeug3.setSitzplaetze(5);
-        fahrzeug3.setVerfuegbar(true);
+        Vehicle vehicle3 = new Vehicle();
+        vehicle3.setDescription("Testfahrzeug3");
+        vehicle3.setDriver("Anna Musterfahrerin");
+        vehicle3.setCarBrand("BMW");
+        vehicle3.setSeats(5);
+        vehicle3.setAvailable(true);
 
-        fahrzeugRepository.save(fahrzeug3);
+        vehicleRepository.save(vehicle3);
 
     }
 }

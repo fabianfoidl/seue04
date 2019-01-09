@@ -1,7 +1,6 @@
 package com.se.ue04;
 
-import com.se.ue04.model.Fahrzeug;
-import com.se.ue04.repository.FahrzeugRepository;
+import com.se.ue04.repository.VehicleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootApplication
 public class Ue04Application implements CommandLineRunner {
 
-	private FahrzeugRepository fahrzeugRepository;
+	private VehicleRepository vehicleRepository;
 
 	private Logger LOG = LoggerFactory.getLogger(Ue04Application.class);
 
@@ -30,8 +26,8 @@ public class Ue04Application implements CommandLineRunner {
 	}
 
 	@Autowired
-	public void setFahrzeugRepository(FahrzeugRepository fahrzeugRepository) {
-		this.fahrzeugRepository = fahrzeugRepository;
+	public void setVehicleRepository(VehicleRepository vehicleRepository) {
+		this.vehicleRepository = vehicleRepository;
 	}
 
 	public static void main(String[] args) {

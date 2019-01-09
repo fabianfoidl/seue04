@@ -1,6 +1,6 @@
 package com.se.ue04.configuration;
 
-import com.se.ue04.controller.FahrzeugController2;
+import com.se.ue04.controller.VehicleController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @PropertySource("classpath:swagger.properties")
-@ComponentScan(basePackageClasses = FahrzeugController2.class)
+@ComponentScan(basePackageClasses = VehicleController.class)
 @Configuration
 public class SwaggerConfig {
 
