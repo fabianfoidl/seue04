@@ -6,10 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
-public class BookedDrives {
+public class BookedDrive {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
@@ -20,7 +21,12 @@ public class BookedDrives {
     private String route;
     private Date time;
 
-    public BookedDrives() {
+    public BookedDrive() {
+        try {
+            this.time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:00:00");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getId() {
@@ -59,7 +65,14 @@ public class BookedDrives {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(Date time) { }
+
+    public void setTime(long day, long month, long year, long hour, long minute) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            this.time = sdf.parse(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

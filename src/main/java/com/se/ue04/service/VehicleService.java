@@ -31,6 +31,10 @@ public class VehicleService {
         return vehicleRepository.findAll();
     }
 
+    public List<Vehicle> getAllVehiclesFittedSeatCount(int seats) {
+        return vehicleRepository.findBySeatsGreaterThanEqual(seats);
+    }
+
     public Vehicle saveVehicle(Vehicle vehicle) {
         Vehicle vehicleToSave;
         try {

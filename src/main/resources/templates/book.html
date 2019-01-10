@@ -5,40 +5,139 @@
     <th:block th:include="layout/header"></th:block>
 </head>
 <body>
-<div class="container">
-    <div th:if="${not #lists.isEmpty(book)}">
-        <h2>All Vehicles</h2>
-        <table class="table table-striped">
-            <tr>
-                <th>Id</th>
-                <th>car brand</th>
-                <th>description</th>
-                <th>seats</th>
-                <th>driver</th>
-                <th>available</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            <tr th:each="vehicle : ${book}">
-                <td th:text="${vehicle.id}">Id</td>
-                <td th:text="${vehicle.carBrand}">car brand</td>
-                <td th:text="${vehicle.description}">description</td>
-                <td th:text="${vehicle.seats}">seats</td>
-                <td th:text="${vehicle.driver}">driver</td>
-                <td th:text="${vehicle.available}">availablse</td>
-                <td><a th:href="${'/vehicles/edit/' + vehicle.id}" class="btn btn-dark">Edit</a></td>
-                <td><a th:href="${'/vehicles/delete/' + vehicle.id}" class="btn btn-danger">Delete</a></td>
-            </tr>
-        </table>
-    </div>
-</div>
+    <div class="container">
+        <br>
+        <br>
+        <h2>Book a Pickup</h2>
+        <p>Enter your data and click on proceed</p>
+        <form class="form-horizontal">
+            <div class="form-group row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5">
+                            <label>number of guests:</label>
+                        </div>
+                        <div class="col col-sm-5">
+                            <select id="numguest" name="noguest">
+                                <option value="1" th:selected="${noguest} == 1">1</option>
+                                <option value="2" th:selected="${noguest} == 2">2</option>
+                                <option value="3" th:selected="${noguest} == 3">3</option>
+                                <option value="4" th:selected="${noguest} == 4">4</option>
+                                <option value="5" th:selected="${noguest} == 5">5</option>
+                                <option value="6" th:selected="${noguest} == 6">6</option>
+                                <option value="7" th:selected="${noguest} == 7">7</option>
+                                <option value="8" th:selected="${noguest} == 8">8</option>
+                                <option value="9" th:selected="${noguest} == 9">9</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<div class="jumbotron">
-    <div class="container text-center">
-        <code>
-            Hallo Fabian!
-        </code>
+            <div class="form-group row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5">
+                            <label>depart from:</label>
+                        </div>
+                        <div class="col col-sm-5">
+                            <select id="pickup" name="pickup">
+                                <option value="1" th:selected="${pickup} == 1">Hotel</option>
+                                <option value="2" th:selected="${pickup} == 2">Airport</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5">
+                            <label>date:</label>
+                        </div>
+                        <div class="col col-sm-5">
+                            <input name="date" id="date" th:value="${date}"/> Format: dd.mm.yyyy
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-5">
+                            <label>time:</label>
+                        </div>
+                        <div class="col col-sm-5">
+                            <input name="time" id="time" th:value="${time}" /> Format: hh.mm
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 col-sm 6 col-xs 6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-9">
+                            <button class="btn btn-outline-success" type="submit">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <br>
+        <br>
+        <div th:if="${not #lists.isEmpty(availableDrives)}">
+            <h3>Available Vehicles</h3>
+            <form class="form-horizontal" action="/booksummary" method="post">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Select</th>
+                        <th>route</th>
+                        <th>date & time</th>
+                        <th>car brand</th>
+                        <th>description</th>
+                        <th>seats</th>
+                        <th>needed seats</th>
+                        <th>driver</th>
+                    </tr>
+                    <tr th:each="drive : ${availableDrives}">
+                        <td><label><input type="radio" name="selectedvehicle" th:value="${drive.getId()}"></label></td>
+                        <td th:text="${route}">route</td><input type="hidden" name="pickup" value="fabian" th:value="${pickup}">
+                        <td th:text="${datetime}">date & time</td><input type="hidden" name="date" th:value="${date}"><input type="hidden" name="time" th:value="${time}">
+                        <td th:text="${drive.carBrand}">car brand</td><input type="hidden" name="vehicle" th:value="${drive.getId()}">
+                        <td th:text="${drive.description}">description</td>
+                        <td th:text="${drive.seats}">seats</td>
+                        <td th:text="${neededseats}">needed seats</td><input type="hidden" name="noguest" th:value="${neededseats}">
+                        <td th:text="${drive.driver}">driver</td>
+                    </tr>
+                </table>
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-md-2 col-sm 6 col-xs 6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                            </div>
+                            <div class="col-lg-9">
+                                <button class="btn btn-outline-success" type="submit">BOOK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+
+    <div class="jumbotron">
+        <div class="container text-center">
+            <code>
+                Hallo Fabian!
+            </code>
+        </div>
+    </div>
 </body>
 </html>
