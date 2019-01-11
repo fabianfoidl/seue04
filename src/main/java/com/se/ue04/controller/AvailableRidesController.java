@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(path = "/api/availablerides/")
@@ -46,7 +46,7 @@ public class AvailableRidesController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ApiOperation("Gets all available drives")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public List<Vehicle> getAllVehicles(@RequestParam("date") String dateString, @RequestParam("time") String timeString,
+    public List<Vehicle> getAllVehicles(@RequestParam("datevalue") String dateString, @RequestParam("timevalue") String timeString,
                                         @RequestParam("seats") String seatsString, @RequestParam("route") String route) {
         // route is already in integer format
         int seats = Integer.parseInt(seatsString);
@@ -57,19 +57,35 @@ public class AvailableRidesController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<Vehicle> vehiclesWithEnoughSeats = vehicleService.getAllVehiclesFittedSeatCount(seats);
-        List<BookedDrive> bookedDrivesWithSameTimeRoute = bookedDrivesService.getAllByRouteAndTime(date, route);
 
-        for (BookedDrive bd : bookedDrivesWithSameTimeRoute) {
-            vehiclesWithEnoughSeats.removeIf(v -> (v.getId().equals(bd.getVehicle())));
+        // get all vehicles which have enough seats
+        List<Vehicle> vehiclesWithEnoughSeats = vehicleService.getAllVehiclesFittedSeatCount(seats);
+        List<Vehicle> availableRides = vehiclesWithEnoughSeats;
+
+        // remove all vehicles which start or end within the same location 59 minutes before or after
+        Date oneHourEarlier = new Date(date.getTime() - TimeUnit.MINUTES.toMillis(59));
+        Date oneHourLater = new Date(date.getTime() + TimeUnit.MINUTES.toMillis(59));
+
+        List<BookedDrive> bookedDrivesOneHourLaterAndEarlier = bookedDrivesService.getAllByRouteAndDateBetween(route, oneHourEarlier, oneHourLater);
+
+        for (BookedDrive bd : bookedDrivesOneHourLaterAndEarlier) {
+            availableRides.removeIf(v -> (v.getId().equals(bd.getVehicle())));
         }
 
+        // remove all vehicles which start or end within the other location 29 minutes before or after
+        Date halfHourEarlierOtherLocation = new Date(date.getTime() - TimeUnit.MINUTES.toMillis(29));
+        Date halfHourLaterOtherLocation = new Date(date.getTime() + TimeUnit.MINUTES.toMillis(29));
 
+        // get the route no of other location
+        String otherRoute = (Constants.START_HOTEL.equals(route) ? Constants.START_AIRPORT : Constants.START_HOTEL);
 
-        LOG.info(bookedDrivesWithSameTimeRoute.toString());
+        List<BookedDrive> bookedDrivesHalfHourLaterAndEarlierOtherLoc = bookedDrivesService.getAllByRouteAndDateBetween(otherRoute, halfHourEarlierOtherLocation, halfHourLaterOtherLocation);
 
-        //return bookedDrivesService.getAllAvailableDrives();
-        return vehiclesWithEnoughSeats;
+        for (BookedDrive bd : bookedDrivesHalfHourLaterAndEarlierOtherLoc) {
+            availableRides.removeIf(v -> (v.getId().equals(bd.getVehicle())));
+        }
+
+        return availableRides;
     }
 
 

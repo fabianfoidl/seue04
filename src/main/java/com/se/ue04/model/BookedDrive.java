@@ -2,10 +2,7 @@ package com.se.ue04.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,11 +19,11 @@ public class BookedDrive {
     private Date time;
 
     public BookedDrive() {
-        try {
+        /*try {
             this.time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:00:00");
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public String getId() {
@@ -65,14 +62,8 @@ public class BookedDrive {
         return time;
     }
 
-    public void setTime(Date time) { }
-
-    public void setTime(long day, long month, long year, long hour, long minute) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            this.time = sdf.parse(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void setTime(Date time) {
+        this.time = time;
     }
+
 }

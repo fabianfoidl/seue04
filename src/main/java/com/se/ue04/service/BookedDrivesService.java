@@ -3,12 +3,10 @@ package com.se.ue04.service;
 import com.se.ue04.model.BookedDrive;
 import com.se.ue04.model.Vehicle;
 import com.se.ue04.repository.BookedDrivesRepository;
-import com.se.ue04.repository.VehicleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +44,10 @@ public class BookedDrivesService {
 
     public List<BookedDrive> getAllByRoute(String route) {
         return bookedDrivesRepository.getByRoute(route);
+    }
+
+    public List<BookedDrive> getAllByRouteAndDateBetween(String route, Date start, Date end) {
+        return bookedDrivesRepository.getByRouteAndTimeBetween(route, start, end);
     }
 
     public BookedDrive saveBookedDrive(BookedDrive bookedDrive) {
