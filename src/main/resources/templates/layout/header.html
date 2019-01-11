@@ -31,6 +31,9 @@
                                     <a class="nav-link" th:href="@{/vehicles/add}">Add Vehicle</a>
                                 </li>
                             </ul>
+                            <ul class="navbar-nav navbar-right" th:if="${loggedin}">
+                                <li><a class="nav-link" href="/login">Test</a></li>
+                            </ul>
                             <ul class="navbar-nav navbar-right">
                                 <li><a class="nav-link" href="/login">Login</a></li>
                             </ul>

@@ -44,8 +44,8 @@ public class VehicleController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Vehicle saveVehicle(@RequestBody Vehicle vehicleToSave) {
-        return vehicleService.saveVehicle(vehicleToSave);
+    public void saveVehicle(@RequestBody Vehicle vehicleToSave) {
+        vehicleService.saveVehicle(vehicleToSave);
     }
 
     @RequestMapping(path = "{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)

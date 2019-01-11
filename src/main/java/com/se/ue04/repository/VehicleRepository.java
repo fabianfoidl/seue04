@@ -9,9 +9,8 @@ import java.util.List;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, String> {
 
-    // find By bleibt immer gleich; Marke MUSS genau so heissen wie das Feld
     Vehicle findByCarBrand(String marke);
     List<Vehicle> findByCarBrandAndDescription(String carBrand, String description);
     List<Vehicle> findByCarBrandAndDescriptionIn(String carBrand, List<String> description);
-    List<Vehicle> findBySeatsGreaterThanEqual(int neededSeats);
+    List<Vehicle> findBySeatsGreaterThanEqualAndAvailable(int neededSeats, boolean available);
 }

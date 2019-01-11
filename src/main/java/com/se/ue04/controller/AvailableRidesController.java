@@ -46,7 +46,7 @@ public class AvailableRidesController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ApiOperation("Gets all available drives")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public List<Vehicle> getAllVehicles(@RequestParam("datevalue") String dateString, @RequestParam("timevalue") String timeString,
+    public List<Vehicle> getAllVehicles(@RequestParam("date") String dateString, @RequestParam("time") String timeString,
                                         @RequestParam("seats") String seatsString, @RequestParam("route") String route) {
         // route is already in integer format
         int seats = Integer.parseInt(seatsString);
@@ -59,8 +59,8 @@ public class AvailableRidesController {
         }
 
         // get all vehicles which have enough seats
-        List<Vehicle> vehiclesWithEnoughSeats = vehicleService.getAllVehiclesFittedSeatCount(seats);
-        List<Vehicle> availableRides = vehiclesWithEnoughSeats;
+        List<Vehicle> vehiclesWithEnoughSeatsAndAvailable = vehicleService.getAllVehiclesFittedSeatCount(seats);
+        List<Vehicle> availableRides = vehiclesWithEnoughSeatsAndAvailable;
 
         // remove all vehicles which start or end within the same location 59 minutes before or after
         Date oneHourEarlier = new Date(date.getTime() - TimeUnit.MINUTES.toMillis(59));

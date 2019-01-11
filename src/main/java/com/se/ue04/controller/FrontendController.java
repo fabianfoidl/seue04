@@ -1,69 +1,47 @@
 package com.se.ue04.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.se.ue04.Constants;
 import com.se.ue04.Helper;
-import com.se.ue04.model.BookedDrive;
+import com.se.ue04.model.User;
 import com.se.ue04.model.Vehicle;
-import com.se.ue04.service.BookedDrivesService;
-import com.se.ue04.service.VehicleService;
-import javafx.application.Application;
+import com.se.ue04.service.FrontendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
+import javax.validation.Valid;
 import java.util.*;
 
 
-//@RestController
 @Controller
-//@RequestMapping(path = "/api/vehicles/")
 public class FrontendController {
 
     private static final Logger LOG = LoggerFactory.getLogger(FrontendController.class);
 
-    private VehicleService vehicleService;
-    private BookedDrivesService bookedDrivesService;
+    private FrontendService frontendService;
 
     @Autowired
-    public void setVehicleService(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
+    public void setFrontendService(FrontendService frontendService) {
+        this.frontendService = frontendService;
     }
 
-    @Autowired
-    public void setBookedDrivesService(BookedDrivesService bookedDrivesService) {
-        this.bookedDrivesService = bookedDrivesService;
-    }
+    // INDEX
 
     @RequestMapping(path = "/")
     public String index() {
         return "index";
     }
 
-    @RequestMapping(path = "vehicles", method = RequestMethod.POST)
-    public String saveVehicle(Vehicle vehicle) {
-        vehicleService.saveVehicle(vehicle);
-        return "redirect:/";
-    }
+    // manage vehicles
 
     @RequestMapping(path = "vehicles", method = RequestMethod.GET)
     public String getAllVehicles(Model model) {
-        //model.addAttribute("vehicles", vehicleService.getAllVehicles());
-        //return "vehicles";
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<Vehicle>> vehicleResponse = restTemplate.exchange("http://localhost:8081/api/vehicles/", HttpMethod.GET, null, new ParameterizedTypeReference<List<Vehicle>>() {});
-        List<Vehicle> vehicleList = vehicleResponse.getBody();
+        List<Vehicle> vehicleList = frontendService.getAllVehicles();
         model.addAttribute("vehicles", vehicleList);
         return "vehicles";
     }
@@ -74,19 +52,36 @@ public class FrontendController {
         return "edit";
     }
 
+    // save new vehicle
+    @RequestMapping(path = "vehicles", method = RequestMethod.POST)
+    public String saveVehicle(@Valid Vehicle vehicle, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("addvehiclefail", true);
+            return "edit";
+        }
+        frontendService.saveVehicle(vehicle);
+        return "redirect:/vehicles";
+    }
+
     @RequestMapping(path = "/vehicles/edit/{id}", method = RequestMethod.GET)
     public String editVehicle(Model model, @PathVariable(value = "id") String id) {
-        model.addAttribute("vehicle", vehicleService.getVehicle(id));
+        Vehicle vehicle = frontendService.getVehicleById(id);
+        // if no vehicle was found, redirect to vehicle page
+        if (vehicle == null) {
+            return "redirect:/vehicles";
+        }
+        model.addAttribute("vehicle", vehicle);
         return "edit";
     }
 
     @RequestMapping(path = "/vehicles/delete/{id}", method = RequestMethod.GET)
     public String deleteVehicle(@PathVariable(name = "id") String id) {
-        vehicleService.deleteVehicle(id);
+        frontendService.deleteVehicleById(id);
         return "redirect:/vehicles";
     }
 
-    // TODO: auf Service auslagern
+    // BOOK VEHICLE
+
     @RequestMapping(path = "/book", method = RequestMethod.GET)
     public String getAvailableDrives(HttpServletRequest request, Model model) {
 
@@ -108,6 +103,7 @@ public class FrontendController {
 
         // check set and format of params
 
+        // Param number of guests
         if (request.getParameter("noguest") == null) {
             model.addAttribute("noguestfail", true);
             paramFail = true;
@@ -136,6 +132,7 @@ public class FrontendController {
             }
         }
 
+        // Param date
         if (request.getParameter("date") == null) {
             model.addAttribute("datefail", true);
             paramFail = true;
@@ -164,6 +161,7 @@ public class FrontendController {
             }
         }
 
+        // Param time
         if (request.getParameter("time") == null) {
             model.addAttribute("timefail", true);
             paramFail = true;
@@ -187,10 +185,10 @@ public class FrontendController {
                     model.addAttribute("time", time);
                     model.addAttribute("timevalue", timeValue);
                 }
-
             }
         }
 
+        // if there was a failure with params, don't return result
        if (paramFail) {
            model.addAttribute("showresult", false);
             return "book";
@@ -205,72 +203,91 @@ public class FrontendController {
        model.addAttribute("datetime", dateTime);
        model.addAttribute("neededseats", noGuest);
 
-       UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://localhost:8081/api/availablerides/")
-                .queryParam("date", date)
-                .queryParam("datevalue", dateValue)
-                .queryParam("timevalue", timeValue)
-                .queryParam("time", time)
-                .queryParam("seats", noGuest)
-                .queryParam("route", pickup);
-       ResponseEntity<List<Vehicle>> vehicleResponse = restTemplate.exchange(builder.toUriString(),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<Vehicle>>() {});
-       List<Vehicle> vehicleList = vehicleResponse.getBody();
+       List<Vehicle> vehicleList = frontendService.getAvailableVehicles(dateValue, timeValue, noGuest, pickup);
+       model.addAttribute("availableDrives", vehicleList);
 
-        model.addAttribute("availableDrives", vehicleList);
-
-        // has to be named like html file
-        return "book";
+       // has to be named like html file
+       return "book";
     }
 
     @RequestMapping(path = "/booksummary", method = RequestMethod.POST)
     public String getBookedRideSummary(HttpServletRequest request, Model model) {
         // set request params
-        String noGuest = request.getParameter("noguest");
-        String pickup = request.getParameter("pickup");
-        String dateString = request.getParameter("date");
-        String dateReq = request.getParameter("datevalue");
-        String timeString = request.getParameter("time");
-        String timeReq = request.getParameter("timevalue");
-        String dateTime = dateString + " - " + timeString;
-        String selectedVehicleId = request.getParameter("selectedvehicle");
+        String noGuest;
+        String pickup;
+        String dateString;
+        String dateReq;
+        String timeString;
+        String timeReq;
+        String dateTime;
+        String selectedVehicleId;
 
-        // TODO: check
-        if (noGuest == "" || pickup == "" || dateString == "" || timeString == "" || selectedVehicleId == "") {
-            LOG.info("I'm here");
+        try {
+            noGuest = request.getParameter("noguest");
+            pickup = request.getParameter("pickup");
+            dateString = request.getParameter("date");
+            dateReq = request.getParameter("datevalue");
+            timeString = request.getParameter("time");
+            timeReq = request.getParameter("timevalue");
+            dateTime = dateString + " - " + timeString;
+            selectedVehicleId = request.getParameter("selectedvehicle");
+        } catch (Exception e) {
+            e.printStackTrace();
             return "book";
         }
 
-        Vehicle vehicle = vehicleService.getVehicle(selectedVehicleId);
+        if (noGuest == "" || pickup == "" || dateString == "" || timeString == "" || selectedVehicleId == "" || dateReq == "" || timeReq == "") {
+            return "book";
+        }
+
+        Vehicle vehicle = frontendService.getVehicleById(selectedVehicleId);
 
         model.addAttribute("noguest", noGuest);
         model.addAttribute("route", pickup);
         model.addAttribute("datetime", dateTime);
         model.addAttribute("vehicle", vehicle);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy HHmmss");
-        Date date = null;
-        try {
-            date = sdf.parse(dateReq + " " + timeReq);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        LOG.info("Parsed date: " + date.toString());
-
-        // TODO: change to API
-
-        BookedDrive bookedDrive = new BookedDrive();
-        bookedDrive.setNoGuests(Integer.parseInt(noGuest));
-        bookedDrive.setRoute(pickup);
-        bookedDrive.setTime(date);
-        bookedDrive.setVehicle(selectedVehicleId);
-
-        bookedDrivesService.saveBookedDrive(bookedDrive);
+        frontendService.saveRide(dateReq, timeReq, noGuest, pickup, selectedVehicleId);
 
         return "booksummary";
     }
 
+    // LOGIN
+
+    @RequestMapping(path = "login", method = RequestMethod.GET)
+    public String getLogin(Model model) {
+        return "login";
+    }
+
+    @RequestMapping(path = "login", method = RequestMethod.POST)
+    public String register(User user, Model model) {
+        frontendService.saveUser(user);
+        model.addAttribute("registerSuccess", true);
+        return "login";
+    }
+
+    @RequestMapping(path = "/login/validate", method = RequestMethod.POST)
+    public String validateLogin(HttpServletRequest request, Model model) {
+        if (request.getParameter("email") == null || request.getParameter("email") == "" || request.getParameter("password") == null || request.getParameter("password") == "") {
+            return "login";
+        }
+        User user = frontendService.getUserByEmail(request.getParameter("email"));
+        if (request.getParameter("password").equals(user.getPassword())) {
+            frontendService.setLoggedIn(true);
+        }
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/login/register", method = RequestMethod.GET)
+    public String getRegister(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @RequestMapping(path = "layout/header", method = RequestMethod.GET)
+    public String getHeader(Model model) {
+        model.addAttribute("loggedin", frontendService.isLoggedIn());
+        return "layout/header";
+    }
 
 }

@@ -21,7 +21,6 @@ public class VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    // no exception handling (LOG), because no null respone
     public Vehicle getVehicle(String id) {
         LOG.info("Getting the vehicle with the given id: " + id);
         return vehicleRepository.findById(id).orElse(null);
@@ -32,19 +31,16 @@ public class VehicleService {
     }
 
     public List<Vehicle> getAllVehiclesFittedSeatCount(int seats) {
-        return vehicleRepository.findBySeatsGreaterThanEqual(seats);
+        return vehicleRepository.findBySeatsGreaterThanEqualAndAvailable(seats, true);
     }
 
-    public Vehicle saveVehicle(Vehicle vehicle) {
-        Vehicle vehicleToSave;
+    public void saveVehicle(Vehicle vehicle) {
         try {
             LOG.info("Saving vehicle...");
-            vehicleToSave = vehicleRepository.save(vehicle);
-            return vehicleToSave;
+            vehicleRepository.save(vehicle);
         } catch (Exception e) {
             LOG.error("An error occurred during vehicle saving: " + e.getMessage());
         }
-        return new Vehicle();
 
     }
 
