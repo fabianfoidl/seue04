@@ -26,8 +26,8 @@
                     <td th:text="${vehicle.seats}">seats</td>
                     <td th:text="${vehicle.driver}">driver</td>
                     <td th:text="${vehicle.available}">available</td>
-                    <td><a th:href="@{vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-dark">Edit</a></td>
-                    <td><a th:href="@{vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-danger">Delete</a></td>
+                    <td><a th:href="@{/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-dark">Edit</a></td>
+                    <td><a th:href="@{/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-danger">Delete</a></td>
                 </tr>
             </table>
         </div>
