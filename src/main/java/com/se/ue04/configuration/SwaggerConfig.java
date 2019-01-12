@@ -19,9 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
-    private static final String LICENCE_TEXT = "Hotel Airport Service Licence";
-    private static final String title = "Fahrzeuge REST API";
-    private static final String description = "RESTful API for Fahrzeuge";
+    private static final String LICENCE_TEXT = "no Licence";
+    private static final String title = "Hotel Airport REST API Documentation";
+    private static final String description = "RESTful API for Hotel Airport Service";
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -36,7 +36,7 @@ public class SwaggerConfig {
     public Docket fahrzeugeApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .pathMapping("/")  // might be /api
+                .pathMapping("/")
                 .select()
                 .paths(PathSelectors.regex("/api.*"))
                 .build();

@@ -3,7 +3,6 @@ package com.se.ue04.model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -20,11 +19,6 @@ public class BookedDrive {
     private String user;
 
     public BookedDrive() {
-        /*try {
-            this.time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:00:00");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     public String getId() {

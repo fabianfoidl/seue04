@@ -33,7 +33,8 @@ public class DataLoader implements CommandLineRunner {
 
         // only for initialization
 
-       /* Vehicle vehicle1 = new Vehicle();
+        /*
+        Vehicle vehicle1 = new Vehicle();
         vehicle1.setDescription("mit Lederausstattung");
         vehicle1.setDriver("Max Musterfahrer");
         vehicle1.setCarBrand("Mercedes Benz E-Klasse");

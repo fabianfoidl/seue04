@@ -1,5 +1,6 @@
 package com.se.ue04.dto;
 
+// class for managing messages and types of exception
 public class MessageDTO {
 
     private String message;

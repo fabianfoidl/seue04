@@ -1,21 +1,15 @@
 package com.se.ue04.controller;
 
-import com.se.ue04.model.BookedDrive;
 import com.se.ue04.model.User;
-import com.se.ue04.model.Vehicle;
-import com.se.ue04.service.BookedDrivesService;
 import com.se.ue04.service.LoginService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/login/")
-@Api(value = "LoginAPI", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "/api/login", tags = "/login", description = "manage logins and registration")
 public class LoginController {
 
     LoginService loginService;
@@ -27,23 +21,23 @@ public class LoginController {
 
     // create new user
     @RequestMapping(path = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation("Create a new user")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public void saveUser(@RequestBody User userToSave) {
+    @ApiOperation(value = "Create a new user", notes = "Post to save a new user")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Error in request")})
+    public void saveUser(@ApiParam(value = "User model in JSON format. All fields must be provided. Email = primary key. Password should be encoded with BCryptPasswordEncoder. Role can be 'ROLE_USER' or 'ROLE_ADMIN'. AN EXISTING USER WILL BE OVERWRITTEN!", required = true) @RequestBody User userToSave) {
         loginService.saveUser(userToSave);
     }
 
     @RequestMapping(path = "{email}", method = RequestMethod.GET)
-    @ApiOperation("Get user")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = User.class)})
-    public User getUserByEmail(@PathVariable(name = "email") String email) {
+    @ApiOperation(value = "Get user by email", notes = "Will return the user, if exists. If not, no body will be returned.", response = User.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = User.class), @ApiResponse(code = 400, message = "Error in request")})
+    public User getUserByEmail(@ApiParam(value = "Email as simple string.", required = true) @PathVariable(name = "email") String email) {
         return loginService.getUserByEmail(email);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation("Get user by email and password")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = User.class)})
-    public User getUserByEmailAndPassword(@RequestBody User userToValidate) {
+    @ApiOperation(value = "Get user by email and password for validation.", notes = "Will also return the user object as JSON.", response = User.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = User.class), @ApiResponse(code = 400, message = "Error in request")})
+    public User getUserByEmailAndPassword(@ApiParam(value = "User as user model (in JSON format). Data can be gotten via 'Get user by email'. Password should be encoded. If user is not found (only email and password are checked), no result body is provided", required = true) @RequestBody User userToValidate) {
         return loginService.getUserByEmailAndPassword(userToValidate.getEmail(), userToValidate.getPassword());
     }
 

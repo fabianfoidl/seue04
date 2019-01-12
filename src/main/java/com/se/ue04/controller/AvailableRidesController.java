@@ -5,10 +5,7 @@ import com.se.ue04.model.BookedDrive;
 import com.se.ue04.model.Vehicle;
 import com.se.ue04.service.BookedDrivesService;
 import com.se.ue04.service.VehicleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(path = "/api/availablerides/")
-@Api(value = "VehiclesControllerAPI", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "/api/availablerides", tags = "/availablerides", description = "Get available rides")
 public class AvailableRidesController {
 
     private VehicleService vehicleService;
@@ -44,10 +41,13 @@ public class AvailableRidesController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    @ApiOperation("Gets all available drives")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public List<Vehicle> getAllVehicles(@RequestParam("date") String dateString, @RequestParam("time") String timeString,
-                                        @RequestParam("seats") String seatsString, @RequestParam("route") String route) {
+    @ApiOperation(value = "Get all available rides", notes = "The value date, time, needed seats and route have to be provided. As Response, all available vehicles will be provided.",
+            response = Vehicle.class, responseContainer = "List", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Error in request")})
+    public List<Vehicle> getAllVehicles(@ApiParam(value = "Param for requested date. Must be in format ddMMyyyy.", required = true) @RequestParam("date") String dateString,
+                                        @ApiParam(value = "Param for requested time. Must be in format hhmmss.", required = true) @RequestParam("time") String timeString,
+                                        @ApiParam(value = "Param for the number of seats needed. Must be an integer." , required = true) @RequestParam("seats") String seatsString,
+                                        @ApiParam(value = "Param for the route. Must be an integer (either 1 for hotel to airport or 2 for airport to hotel).", required = true) @RequestParam("route") String route) {
         // route is already in integer format
         int seats = Integer.parseInt(seatsString);
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy HHmmss");
@@ -87,6 +87,5 @@ public class AvailableRidesController {
 
         return availableRides;
     }
-
 
 }

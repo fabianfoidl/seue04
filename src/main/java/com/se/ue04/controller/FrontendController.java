@@ -8,12 +8,10 @@ import com.se.ue04.service.FrontendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -35,7 +33,7 @@ public class FrontendController {
     // INDEX
 
     @RequestMapping(path = "/")
-    public String index(Model model, Principal principal) {
+    public String index(Model model, Principal principal, HttpServletRequest request) {
         if (principal != null) {
             User user = frontendService.getUserByEmail(principal.getName());
             model.addAttribute("user", user);
@@ -105,7 +103,6 @@ public class FrontendController {
         String dateValue = "";
         String time = "";
         String timeValue = "";
-        RestTemplate restTemplate = new RestTemplate();
 
         // check set and format of params
 
@@ -268,12 +265,12 @@ public class FrontendController {
     @RequestMapping(path = "login", method = RequestMethod.POST)
     public String register(User user, Model model) {
         user.setPassword(Helper.encryptPassword(user.getPassword()));
-        frontendService.saveUser(user);
         if (frontendService.getUserByEmail(user.getEmail()) != null) {
             model.addAttribute("alreadyregistered", true);
             model.addAttribute("email", user.getEmail());
             return "register";
         }
+        frontendService.saveUser(user);
         model.addAttribute("registerSuccess", true);
         return "login";
     }

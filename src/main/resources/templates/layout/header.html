@@ -38,7 +38,7 @@
                                 <li><a class="nav-link text-warning" th:href="@{/logout}">Logout</a></li>
                             </ul>
                             <ul class="navbar-nav navbar-right" th:if="${#request.userPrincipal == null}">
-                                <li><a class="nav-link" href="/login">Login</a></li>
+                                <li><a class="nav-link" th:href="@{/login}">Login</a></li>
                             </ul>
                         </div>
                     </nav>
