@@ -102,7 +102,7 @@
             <h3>Available Vehicles</h3>
             <p class="text-danger" th:if="${#lists.isEmpty(availableDrives)}">Unfortunately, there is no vehicle available for the information you requested.</p>
             <div th:if="${not #lists.isEmpty(availableDrives)}">
-                <form class="form-horizontal" action="/booksummary" method="post">
+                <form class="form-horizontal" th:action="@{/booksummary}" method="post">
                     <table class="table table-striped">
                         <tr>
                             <th>Select</th>
