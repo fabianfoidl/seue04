@@ -24,7 +24,7 @@
                 <td th:text="${ride.getNoGuests()}">no of guests</td>
                 <td th:text="${T(com.se.ue04.Helper).getVehicleById(ride.getVehicle()).getCarBrand()}">vehicle</td>
                 <td th:text="${T(com.se.ue04.Helper).getVehicleById(ride.getVehicle()).getDriver()}">driver</td>
-                <td><a th:href="${'/rides/' + ride.getId()}" class="btn btn-danger">Delete</a></td>
+                <td><a th:href="@{/rides/{id}(id=${ride.getId()})}" class="btn btn-danger">Delete</a></td>
             </tr>
         </table>
     </div>
