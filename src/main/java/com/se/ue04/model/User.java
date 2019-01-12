@@ -1,8 +1,6 @@
 package com.se.ue04.model;
 
 import com.se.ue04.Constants;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 
@@ -13,10 +11,10 @@ public class User {
     private String email;
     private String name;
     private String password;
-    private String type;
+    private String role;
 
     public User() {
-        this.type = Constants.STANDARD_USER;
+        this.role = Constants.STANDARD_USER;
     }
 
     public String getEmail() {
@@ -43,11 +41,12 @@ public class User {
         this.password = password;
     }
 
-    public String getType() {
-        return type;
+    public String getRole() {
+        return role;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRole(String role) {
+        this.role = role;
     }
+
 }

@@ -7,7 +7,12 @@
 </head>
 <body>
     <div class="jumbotron">
+        <p class="text-success" th:if="${#request.getParameter('login') == 'true'}">Login successful!</p>
+        <p class="text-success" th:if="${#request.getParameter('logout') == 'true'}">Logout successful!</p>
         <div class="container text-center">
+            <div class="alert alert-success" th:if="${#request.userPrincipal != null}">
+                <strong>Welcome!</strong> <span th:text="${user.getName()}"></span>
+            </div>
             <h1>Welcome to the booking system</h1>
             <p>For organizing rides between hotel and airport proceed with the login in the left upper corner</p>
         </div>

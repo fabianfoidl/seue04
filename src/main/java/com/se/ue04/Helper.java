@@ -1,7 +1,15 @@
 package com.se.ue04;
 
+import com.se.ue04.model.Vehicle;
+import com.se.ue04.service.FrontendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,6 +49,26 @@ public class Helper {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // Encrypt Password with BCryptPasswordEncoder
+    public static String encryptPassword(String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(password);
+    }
+
+    public static Vehicle getVehicleById(String id) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Vehicle> vehicleResponse = restTemplate.exchange(Constants.APIURL + "/vehicles/" + id,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Vehicle>() {});
+        return vehicleResponse.getBody();
+    }
+
+    public static String formatDate(Date date) {
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return df.format(date);
     }
 
 }

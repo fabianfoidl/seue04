@@ -9,10 +9,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/bookeddrives/")
@@ -31,6 +30,20 @@ public class BookedDrivesController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     public BookedDrive saveBookedDrive(@RequestBody BookedDrive bookedDriveToSave) {
         return bookedDrivesService.saveBookedDrive(bookedDriveToSave);
+    }
+
+    @RequestMapping(path = "{user}", method = RequestMethod.GET)
+    @ApiOperation("Get booked drives by user")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = BookedDrive.class)})
+    public List<BookedDrive> getBookedDriveByUser(@PathVariable(name = "user") String user) {
+        return bookedDrivesService.getBookedDriveByUser(user);
+    }
+
+    @RequestMapping(path = "{ride}", method = RequestMethod.DELETE)
+    @ApiOperation("Delete booked ride")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    public void deleteBookedDrive(@PathVariable(name = "ride") String rideId) {
+        bookedDrivesService.deleteBookedDrive(rideId);
     }
 
 }

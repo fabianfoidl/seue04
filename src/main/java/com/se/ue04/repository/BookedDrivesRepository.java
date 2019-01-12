@@ -14,4 +14,5 @@ public interface BookedDrivesRepository extends JpaRepository<BookedDrive, Strin
     List<BookedDrive> getByRoute (String route);
     List<BookedDrive> getByTimeAndRoute(Date time, String route);
     List<BookedDrive> getByRouteAndTimeBetween(String route, Date startTime, Date endTime);
+    List<BookedDrive> getByUser(String id);
 }

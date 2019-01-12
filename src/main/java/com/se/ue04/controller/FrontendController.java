@@ -8,6 +8,7 @@ import com.se.ue04.service.FrontendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.*;
 
 
@@ -33,7 +35,11 @@ public class FrontendController {
     // INDEX
 
     @RequestMapping(path = "/")
-    public String index() {
+    public String index(Model model, Principal principal) {
+        if (principal != null) {
+            User user = frontendService.getUserByEmail(principal.getName());
+            model.addAttribute("user", user);
+        }
         return "index";
     }
 
@@ -211,7 +217,7 @@ public class FrontendController {
     }
 
     @RequestMapping(path = "/booksummary", method = RequestMethod.POST)
-    public String getBookedRideSummary(HttpServletRequest request, Model model) {
+    public String getBookedRideSummary(HttpServletRequest request, Model model, Principal principal) {
         // set request params
         String noGuest;
         String pickup;
@@ -243,11 +249,11 @@ public class FrontendController {
         Vehicle vehicle = frontendService.getVehicleById(selectedVehicleId);
 
         model.addAttribute("noguest", noGuest);
-        model.addAttribute("route", pickup);
+        model.addAttribute("route", (pickup.equals(Constants.START_HOTEL) ? "Hotel -> Airport" : "Airport -> Hotel"));
         model.addAttribute("datetime", dateTime);
         model.addAttribute("vehicle", vehicle);
 
-        frontendService.saveRide(dateReq, timeReq, noGuest, pickup, selectedVehicleId);
+        frontendService.saveRide(dateReq, timeReq, noGuest, pickup, selectedVehicleId, principal.getName());
 
         return "booksummary";
     }
@@ -261,21 +267,15 @@ public class FrontendController {
 
     @RequestMapping(path = "login", method = RequestMethod.POST)
     public String register(User user, Model model) {
+        user.setPassword(Helper.encryptPassword(user.getPassword()));
         frontendService.saveUser(user);
+        if (frontendService.getUserByEmail(user.getEmail()) != null) {
+            model.addAttribute("alreadyregistered", true);
+            model.addAttribute("email", user.getEmail());
+            return "register";
+        }
         model.addAttribute("registerSuccess", true);
         return "login";
-    }
-
-    @RequestMapping(path = "/login/validate", method = RequestMethod.POST)
-    public String validateLogin(HttpServletRequest request, Model model) {
-        if (request.getParameter("email") == null || request.getParameter("email") == "" || request.getParameter("password") == null || request.getParameter("password") == "") {
-            return "login";
-        }
-        User user = frontendService.getUserByEmail(request.getParameter("email"));
-        if (request.getParameter("password").equals(user.getPassword())) {
-            frontendService.setLoggedIn(true);
-        }
-        return "redirect:/";
     }
 
     @RequestMapping(path = "/login/register", method = RequestMethod.GET)
@@ -284,10 +284,28 @@ public class FrontendController {
         return "register";
     }
 
+    @RequestMapping(path = "rides", method = RequestMethod.GET)
+    public String getRides(Model model, Principal principal) {
+        User user = frontendService.getUserByEmail(principal.getName());
+        model.addAttribute("bookeddrivesheading", "Booked rides for " + user.getName());
+        model.addAttribute("rides", frontendService.getBookedDrivesByUser(user.getEmail()));
+        return "rides";
+    }
+
+    @RequestMapping(path = "/rides/{id}", method = RequestMethod.GET)
+    public String deleteRides(@PathVariable(name = "id") String id) {
+        frontendService.deleteRide(id);
+        return "redirect:/rides";
+    }
+
     @RequestMapping(path = "layout/header", method = RequestMethod.GET)
     public String getHeader(Model model) {
-        model.addAttribute("loggedin", frontendService.isLoggedIn());
         return "layout/header";
+    }
+
+    @RequestMapping(path = "/403", method = RequestMethod.GET)
+    public String accessDenied(Model model) {
+       return "403";
     }
 
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Your booked rides</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+<div class="container" style="margin-top: 30px;">
+    <div th:if="${not #lists.isEmpty(rides)}">
+        <h2 th:text="${bookeddrivesheading}">Your booked Drives</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>route</th>
+                <th>date & time</th>
+                <th>no of guests</th>
+                <th>vehicle</th>
+                <th>driver</th>
+                <th>delete</th>
+            </tr>
+            <tr th:each="ride : ${rides}">
+                <td th:if="${T(com.se.ue04.Constants).START_HOTEL.equals(ride.getRoute())}">Hotel -> Airport</td>
+                <td th:if="${T(com.se.ue04.Constants).START_AIRPORT.equals(ride.getRoute())}">Airport -> Hotel</td>
+                <td th:text="${T(com.se.ue04.Helper).formatDate(ride.getTime())}">time</td>
+                <td th:text="${ride.getNoGuests()}">no of guests</td>
+                <td th:text="${T(com.se.ue04.Helper).getVehicleById(ride.getVehicle()).getCarBrand()}">vehicle</td>
+                <td th:text="${T(com.se.ue04.Helper).getVehicleById(ride.getVehicle()).getDriver()}">driver</td>
+                <td><a th:href="${'/rides/' + ride.getId()}" class="btn btn-danger">Delete</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="jumbotron" style="margin-top: 20px;">
+    <div class="container text-center">
+        <code>
+            <<< END OF PAGE >>>
+        </code>
+    </div>
+</div>
+</body>
+</html>

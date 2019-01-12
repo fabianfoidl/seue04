@@ -9,9 +9,12 @@
             <br>
             <br>
             <p th:if="${registerSuccess}" class="text-info">Registration successful! Please log in.</p>
+            <div th:if="${#request.getParameter('error') == 'true'}"
+                 style="color:red;margin:10px 0px;">Login Failed!<br />
+            </div>
             <div class="row">
                 <div class="span12">
-                    <form class="form-horizontal" action="/login/validate" method="POST">
+                    <form class="form-horizontal" th:action="@{/j_spring_security_check}" method="POST">
                         <fieldset>
                             <div id="legend">
                                 <legend class="">Login</legend>
@@ -43,6 +46,9 @@
                     <div class="controls">
                         <a th:href="${'/login/register'}" class="btn btn-info">Register</a>
                     </div>
+                    <br>
+                    <br>
+                    <p>Try with credentials user:user for user role and admin:admin for admin role</p>
                 </div>
             </div>
         </div>

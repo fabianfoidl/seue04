@@ -7,5 +7,5 @@ public class Constants {
     public static final String START_AIRPORT = "2";
     public static final String START_AIRPORT_NAME = "Airport";
     public static final String APIURL = "http://localhost:8081/api";
-    public static final String STANDARD_USER = "USER";
+    public static final String STANDARD_USER = "ROLE_USER";
 }

@@ -30,11 +30,14 @@
                                 <li class="nav-item">
                                     <a class="nav-link" th:href="@{/vehicles/add}">Add Vehicle</a>
                                 </li>
+                                <li class="nav-item" th:if="${#request.userPrincipal != null}">
+                                    <a class="nav-link" th:href="@{/rides}">Your Booked Rides</a>
+                                </li>
                             </ul>
-                            <ul class="navbar-nav navbar-right" th:if="${loggedin}">
-                                <li><a class="nav-link" href="/login">Test</a></li>
+                            <ul class="navbar-nav navbar-right" th:if="${#request.userPrincipal != null}">
+                                <li><a class="nav-link text-warning" th:href="@{/logout}">Logout</a></li>
                             </ul>
-                            <ul class="navbar-nav navbar-right">
+                            <ul class="navbar-nav navbar-right" th:if="${#request.userPrincipal == null}">
                                 <li><a class="nav-link" href="/login">Login</a></li>
                             </ul>
                         </div>

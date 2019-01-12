@@ -59,6 +59,13 @@ public class BookedDrivesService {
             LOG.error("An error occurred during drive booking saving: " + e.getMessage());
         }
         return new BookedDrive();
+    }
 
+    public List<BookedDrive> getBookedDriveByUser(String id) {
+        return bookedDrivesRepository.getByUser(id);
+    }
+
+    public void deleteBookedDrive(String id) {
+        bookedDrivesRepository.deleteById(id);
     }
 }

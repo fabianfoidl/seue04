@@ -17,6 +17,7 @@ public class BookedDrive {
     private int noGuests;
     private String route;
     private Date time;
+    private String user;
 
     public BookedDrive() {
         /*try {
@@ -66,4 +67,11 @@ public class BookedDrive {
         this.time = time;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 }

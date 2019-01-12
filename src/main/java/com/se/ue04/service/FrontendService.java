@@ -24,8 +24,6 @@ public class FrontendService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private boolean loggedIn;
-
     public List<Vehicle> getAllVehicles() {
         ResponseEntity<List<Vehicle>> vehicleResponse = restTemplate.exchange(Constants.APIURL + "/vehicles/",
                         HttpMethod.GET,
@@ -65,7 +63,7 @@ public class FrontendService {
         return vehicleList;
     }
 
-    public void saveRide(String dateString, String timeString, String noGuest, String pickup, String selectedVehicleId) {
+    public void saveRide(String dateString, String timeString, String noGuest, String pickup, String selectedVehicleId, String user) {
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy HHmmss");
         Date date;
         try {
@@ -80,6 +78,7 @@ public class FrontendService {
         bookedDrive.setRoute(pickup);
         bookedDrive.setTime(date);
         bookedDrive.setVehicle(selectedVehicleId);
+        bookedDrive.setUser(user);
 
         restTemplate.postForLocation(Constants.APIURL + "/bookeddrives/", bookedDrive);
     }
@@ -96,11 +95,16 @@ public class FrontendService {
         return userResponse.getBody();
     }
 
-    public boolean isLoggedIn() {
-        return loggedIn;
+    public List<BookedDrive> getBookedDrivesByUser(String userId) {
+        ResponseEntity<List<BookedDrive>> vehicleResponse = restTemplate.exchange(Constants.APIURL + "/bookeddrives/" + userId,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<BookedDrive>>() {});
+        return vehicleResponse.getBody();
     }
 
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    public void deleteRide(String id) {
+        restTemplate.delete(Constants.APIURL + "/bookeddrives/" + id);
     }
+
 }
