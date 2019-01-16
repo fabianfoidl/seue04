@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Hotel Airport Service</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+    <div class="jumbotron">
+        <p class="text-success" th:if="${#request.getParameter('login') == 'true'}">Login successful!</p>
+        <p class="text-success" th:if="${#request.getParameter('logout') == 'true'}">Logout successful!</p>
+        <div class="container text-center">
+            <div class="alert alert-success" th:if="${#request.userPrincipal != null}">
+                <strong>Welcome!</strong> <span th:text="${user.getName()}"></span>
+            </div>
+            <h1>Welcome to the booking system</h1>
+            <p>For organizing rides between hotel and airport proceed with the login in the right upper corner.</p>
+        </div>
+        <div class="row text-center flex-row">
+            <img src="../../static/images/car.jpg" width="30%"
+                 th:src="@{/images/car.jpg}" />
+        </div>
+        <p th:text="${apiurl}"></p>
+    </div>
+</body>
+</html>
