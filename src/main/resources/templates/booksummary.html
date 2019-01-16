@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Book rides</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <br>
+        <h2>Your booked pick-up</h2>
+        <p>Enjoy your the ride.</p>
+
+        <table class="table table-striped">
+            <tr>
+                <th>route</th>
+                <th>date & time</th>
+                <th>no of guests</th>
+                <th>vehicle</th>
+                <th>driver</th>
+            </tr>
+            <tr>
+                <td th:text="${route}">route</td>
+                <td th:text="${datetime}">date & time</td>
+                <td th:text="${noguest}">no of guests</td>
+                <td th:text="${vehicle.getCarBrand()}">vehicle</td>
+                <td th:text="${vehicle.getDriver()}">driver</td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <a class="btn btn-primary" th:href="@{/book}" role="button">Back to the booking form</a>
+    </div>
+</body>
+</html>

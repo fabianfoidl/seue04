@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <link th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}" href="http://cdn.jsdelivr.net/webjars/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+</head>
+    <body>
+        <div th:fragment="header">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand" href="#">Navigation</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/book}">Book</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/vehicles}">Vehicles</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/vehicles/add}">Add Vehicle</a>
+                                </li>
+                                <li class="nav-item" th:if="${#request.userPrincipal != null}">
+                                    <a class="nav-link" th:href="@{/rides}">Your Booked Rides</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav navbar-right" th:if="${#request.userPrincipal != null}">
+                                <li><a class="nav-link text-warning" th:href="@{/logout}">Logout</a></li>
+                            </ul>
+                            <ul class="navbar-nav navbar-right" th:if="${#request.userPrincipal == null}">
+                                <li><a class="nav-link" th:href="@{/login}">Login</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+
+        <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}" src="webjars/jquery/3.3.1/jquery.min.js"></script>
+        <script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}" src="webjars/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+
+    </body>
+</html>
