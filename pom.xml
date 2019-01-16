@@ -12,7 +12,7 @@
 	<artifactId>ue04</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ue04</name>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<description>UE04 Service Engineering</description>
 
 	<properties>
@@ -145,5 +145,5 @@
       		</plugin>
 		</plugins>
 	</build>
-
+	
 </project>
