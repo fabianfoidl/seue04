@@ -1,15 +1,20 @@
 package com.se.ue04.boot;
 
 import com.se.ue04.Constants;
+import com.se.ue04.Helper;
+import com.se.ue04.model.Account;
 import com.se.ue04.model.Route;
 import com.se.ue04.model.Vehicle;
+import com.se.ue04.repository.AccountRepository;
 import com.se.ue04.repository.RouteRepository;
 import com.se.ue04.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 // class for importing data into database on startup
 @Component
@@ -17,6 +22,7 @@ public class DataLoader implements CommandLineRunner {
 
     private VehicleRepository vehicleRepository;
     private RouteRepository routeRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
     public void setVehicleRepository(VehicleRepository vehicleRepository) {
@@ -26,6 +32,11 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     public void setRouteRepository(RouteRepository routeRepository) {
         this.routeRepository = routeRepository;
+    }
+    
+    @Autowired
+    public void setAccountRepository(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -94,6 +105,21 @@ public class DataLoader implements CommandLineRunner {
         route2.setDuration(Duration.ofMinutes(30));
 
         routeRepository.save(route2);
+        
+        Account account1 = new Account();
+        account1.setName("User");
+        account1.setRole(Constants.STANDARD_USER);
+        account1.setPassword(Helper.encryptPassword("user"));
+        
+        accountRepository.save(account1);
+        
+        Account account2 = new Account();
+        account2.setName("Admin");
+        account2.setRole("ROLE_ADMIN");
+        account2.setPassword(Helper.encryptPassword("admin"));
+        
+        accountRepository.save(account2);
+        
 
         
 
