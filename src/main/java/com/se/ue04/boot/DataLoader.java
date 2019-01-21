@@ -107,6 +107,7 @@ public class DataLoader implements CommandLineRunner {
         routeRepository.save(route2);
         
         Account account1 = new Account();
+        account1.setEmail("user");
         account1.setName("User");
         account1.setRole(Constants.STANDARD_USER);
         account1.setPassword(Helper.encryptPassword("user"));
@@ -114,6 +115,7 @@ public class DataLoader implements CommandLineRunner {
         accountRepository.save(account1);
         
         Account account2 = new Account();
+        account2.setEmail("admin");
         account2.setName("Admin");
         account2.setRole("ROLE_ADMIN");
         account2.setPassword(Helper.encryptPassword("admin"));
